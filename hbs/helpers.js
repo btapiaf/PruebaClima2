@@ -15,20 +15,19 @@ hbs.registerHelper('capitalizar', (texto) => {
     return palabras.join(' ');
 });
 
-const ubicacion = require(`./controlador/ubicacion`);
-const clima = require('./controlador/clima');
 
-hbs.registerHelper('ciudad',(city) =>{
+hbs.registerHelper('nombre',(ciudad) =>{
+    const nombre = encodeURI(ciudad)
+    const instance = axios.create({
+        baseURL :`https://devru-latitude-longitude-find-v1.p.rapidapi.com/latlon.php?location=${nombre}`,
+        headers : {'X-RapidAPI-Key':'793768cf71mshc8af7108eafc540p1970d1jsn94d337e8ccfd' }
+    });
+    const resp = instance.get();
 
-    const getInfo = async(city) => {
-        try {
-            const coords = await ubicacion.getCiudadLatLon(ciudad);
-            const temp = await clima.getClima(coords.lat, coords.lon);
-            return `El clima de ${ coords.name } es de ${ temp }.`;
-        } catch (e) {
-            return `No se pudo determinar el clima de ${ ciudad }`;
-        }
-    }
+
+    const data = resp.data.Results[0];
+    const name  = data.name;
+    return {name}
 
 })
 
