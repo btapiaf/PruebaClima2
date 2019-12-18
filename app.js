@@ -1,17 +1,17 @@
-const http = require('http');
+const ubicacion = require(`./controlador/ubicacion`);
+const clima = require('./controlador/clima');
 
-http.createServer((req, res) => {
-
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-
-    let salida = {
-        nombre: 'Rodrigo',
-        edad: 37,
-        url: req.url
+const getInfo = async(ciudad) => {
+    try {
+        const coords = await ubicacion.getCiudadLatLon(ciudad);
+        const temp = await clima.getClima(coords.lat, coords.lon);
+        return `El clima de ${ coords.name } es de ${ temp }.`;
+    } catch (e) {
+        return `No se pudo determinar el clima de ${ ciudad }`;
     }
-    res.write(JSON.stringify(salida));
-    //res.write("Hola Mundo, desde nodeJS!");
-    res.end();
-}).listen(8085);
+}
 
-console.log("Escuchando en el puerto 8085");
+
+getInfo(argv.nombre)
+    .then(console.log)
+    .catch(console.log);

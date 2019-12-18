@@ -14,3 +14,22 @@ hbs.registerHelper('capitalizar', (texto) => {
 
     return palabras.join(' ');
 });
+
+const ubicacion = require(`./controlador/ubicacion`);
+const clima = require('./controlador/clima');
+
+hbs.registerHelper('ciudad',(city) =>{
+
+    const getInfo = async(city) => {
+        try {
+            const coords = await ubicacion.getCiudadLatLon(ciudad);
+            const temp = await clima.getClima(coords.lat, coords.lon);
+            return `El clima de ${ coords.name } es de ${ temp }.`;
+        } catch (e) {
+            return `No se pudo determinar el clima de ${ ciudad }`;
+        }
+    }
+
+})
+
+

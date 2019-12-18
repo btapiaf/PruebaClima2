@@ -15,6 +15,7 @@ app.set('view engine', 'hbs');
 app.get('/', function(req, res) {
     res.render('home', {
         nombre: "BORIS TAPIA"
+        
     });
 });
 
@@ -26,3 +27,4 @@ app.get('/about', (req, res) => {
 app.listen(port, () => {
     console.log(`Escuchando peticiones en el puerto ${port}`);
 });
+
